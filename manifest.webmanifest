@@ -1,0 +1,17 @@
+{
+  "name": "Mi Backlog Switch",
+  "short_name": "Backlog",
+  "description": "Mis juegos de Nintendo Switch ordenados por nota de Metacritic para decidir qué jugar.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f4f6",
+  "theme_color": "#e60012",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

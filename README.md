@@ -17,3 +17,7 @@ Abre http://localhost:8765.
 - `data.js`: listado de juegos, notas, pros y contras (editable).
 - `box/`: carátulas oficiales (icono de la eShop de Nintendo), mostradas como caja de Switch.
 - Notas de Metacritic consultadas el 26/11/2026.
+
+## Instalar en el móvil
+
+Abre la web publicada y usa "Instalar app" / "Añadir a pantalla de inicio" (Chrome en Android) o Compartir → "Añadir a pantalla de inicio" (Safari en iPhone). Funciona sin conexión con la última versión cargada.
