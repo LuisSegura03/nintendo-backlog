@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi Backlog Switch</title>
+<style>
+  :root {
+    --bg: #f4f4f6; --surface: #ffffff; --text: #18181b; --muted: #6b6b76; --border: #e2e2e8;
+    --accent: #e60012; --chip: #f0f0f3;
+    --good: #1f9d55; --mid: #d4a20b; --bad: #d93838;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111114; --surface: #1b1b20; --text: #ececf1; --muted: #9a9aa6; --border: #2c2c34; --chip: #26262d; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { background: var(--accent); color: #fff; padding: 20px 16px; }
+  header .wrap { max-width: 1000px; margin: 0 auto; }
+  header h1 { margin: 0; font-size: 24px; }
+  header p { margin: 4px 0 0; opacity: .9; font-size: 14px; }
+  main { max-width: 1000px; margin: 0 auto; padding: 16px; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
+  .stat b { display: block; font-size: 22px; }
+  .stat span { color: var(--muted); font-size: 13px; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 16px; position: sticky; top: 0; z-index: 5; }
+  .controls input[type=search], .controls select { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; font: inherit; }
+  .controls input[type=search] { flex: 1 1 180px; }
+  .controls label { display: flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); }
+
+  .list { display: flex; flex-direction: column; gap: 14px; }
+  .card { display: grid; grid-template-columns: 52px 150px 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .card.done { opacity: .55; }
+  .rank { font-size: 26px; font-weight: 800; color: var(--muted); text-align: center; padding-top: 4px; }
+  .cover { width: 150px; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; background: var(--chip); }
+  .head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; }
+  .head h2 { margin: 0; font-size: 19px; line-height: 1.25; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+  .chip { background: var(--chip); color: var(--muted); border-radius: 999px; padding: 2px 10px; font-size: 12.5px; }
+  .scorebox { flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 78px; text-decoration: none; }
+  .score { width: 58px; height: 58px; border-radius: 10px; color: #fff; display: grid; place-items: center; font-size: 24px; font-weight: 800; }
+  .scorebox small { color: var(--muted); font-size: 11px; line-height: 1.2; text-align: center; }
+  .card { min-width: 0; } .body-col { min-width: 0; }
+  .s-good { background: var(--good); } .s-mid { background: var(--mid); } .s-bad { background: var(--bad); }
+  .desc { margin: 0 0 10px; }
+  .note { font-size: 13px; color: var(--muted); border-left: 3px solid var(--mid); padding-left: 8px; margin: 0 0 10px; }
+  .pc { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .pc h3 { margin: 0 0 4px; font-size: 14px; }
+  .pc ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .pros h3 { color: var(--good); } .cons h3 { color: var(--bad); }
+  .status { margin-top: 10px; display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
+  .status select { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 6px; font: inherit; }
+  .empty { text-align: center; color: var(--muted); padding: 40px; }
+  footer { max-width: 1000px; margin: 0 auto; padding: 8px 16px 30px; color: var(--muted); font-size: 12.5px; }
+
+  @media (max-width: 720px) {
+    .controls { position: static; }
+    .card { grid-template-columns: 90px 1fr; }
+    .rank { display: none; }
+    .cover { width: 90px; }
+    .pc { grid-template-columns: 1fr; }
+    .head h2 { font-size: 17px; }
+    .body-col { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>Mi Backlog Switch</h1>
+  <p>Tus juegos digitales de Nintendo ordenados por nota de Metacritic (versión Switch)</p>
+</div></header>
+
+<main>
+  <section class="stats" id="stats"></section>
+
+  <section class="controls">
+    <input type="search" id="q" placeholder="Buscar juego…" aria-label="Buscar">
+    <select id="sort" aria-label="Ordenar">
+      <option value="score">Ordenar: nota Metacritic</option>
+      <option value="value">Ordenar: nota por hora (rápidos y buenos primero)</option>
+      <option value="short">Ordenar: más cortos primero</option>
+      <option value="recent">Ordenar: compra más reciente</option>
+    </select>
+    <select id="genre" aria-label="Género"><option value="">Todos los géneros</option></select>
+    <select id="statusFilter" aria-label="Estado">
+      <option value="">Todos los estados</option>
+      <option value="pendiente">Pendiente</option>
+      <option value="jugando">Jugando</option>
+      <option value="terminado">Terminado</option>
+      <option value="abandonado">Abandonado</option>
+    </select>
+    <label><input type="checkbox" id="hideEndless"> Ocultar juegos sin final</label>
+  </section>
+
+  <section class="list" id="list"></section>
+</main>
+
+<footer>
+  Notas de Metacritic consultadas el 26/11/2026. Cuando la versión de Switch no tiene metascore propio se usa el general y se indica.
+  Las duraciones son aproximadas. El estado de cada juego se guarda solo en este navegador.
+</footer>
+
+<script src="data.js"></script>
+<script>
+(() => {
+  const GAMES = window.GAMES;
+  const STORE_KEY = "backlog-switch-status";
+  const STATUS = { pendiente: "Pendiente", jugando: "Jugando", terminado: "Terminado", abandonado: "Abandonado" };
+
+  let statuses = {};
+  try { statuses = JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; } catch (e) { statuses = {}; }
+  const saveStatuses = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(statuses)); } catch (e) {} };
+  const statusOf = g => statuses[g.id] || "pendiente";
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const scoreClass = s => s >= 75 ? "s-good" : s >= 50 ? "s-mid" : "s-bad";
+  const fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" });
+
+  // Género principal para el filtro (antes de la barra)
+  const mainGenre = g => g.genre.split(" / ")[0];
+  [...new Set(GAMES.map(mainGenre))].sort().forEach(gen => {
+    const o = document.createElement("option"); o.value = gen; o.textContent = gen; $("genre").appendChild(o);
+  });
+
+  // Ranking fijo por nota (empates: más reseñas primero)
+  const ranked = [...GAMES].sort((a, b) => b.score - a.score || b.reviews - a.reviews);
+  ranked.forEach((g, i) => g.rank = i + 1);
+
+  function renderStats() {
+    const pend = GAMES.filter(g => statusOf(g) === "pendiente" || statusOf(g) === "jugando");
+    const hours = pend.reduce((a, g) => a + (g.horas || 0), 0);
+    const avg = Math.round(GAMES.reduce((a, g) => a + g.score, 0) / GAMES.length);
+    const done = GAMES.filter(g => statusOf(g) === "terminado").length;
+    $("stats").innerHTML = `
+      <div class="stat"><b>${GAMES.length}</b><span>juegos comprados</span></div>
+      <div class="stat"><b>${pend.length}</b><span>pendientes o jugando</span></div>
+      <div class="stat"><b>~${hours} h</b><span>de backlog con final</span></div>
+      <div class="stat"><b>${avg}</b><span>nota media</span></div>
+      <div class="stat"><b>${done}</b><span>terminados</span></div>`;
+  }
+
+  function render() {
+    const q = $("q").value.trim().toLowerCase();
+    const genre = $("genre").value, st = $("statusFilter").value, hideEndless = $("hideEndless").checked;
+    let items = ranked.filter(g =>
+      (!q || g.title.toLowerCase().includes(q)) &&
+      (!genre || mainGenre(g) === genre) &&
+      (!st || statusOf(g) === st) &&
+      (!hideEndless || g.horas)
+    );
+    const sort = $("sort").value;
+    const h = g => g.horas || 9999;
+    if (sort === "short") items.sort((a, b) => h(a) - h(b) || b.score - a.score);
+    if (sort === "recent") items.sort((a, b) => b.comprado.localeCompare(a.comprado));
+    if (sort === "value") items.sort((a, b) => (b.score / Math.sqrt(h(b))) - (a.score / Math.sqrt(h(a))));
+
+    if (!items.length) { $("list").innerHTML = `<p class="empty">Ningún juego coincide con los filtros.</p>`; return; }
+
+    $("list").innerHTML = items.map(g => {
+      const s = statusOf(g);
+      const mcUrl = `https://www.metacritic.com/game/${g.slug}/`;
+      const scoreLabel = g.scoreSource === "switch" ? `Switch · ${g.reviews} reseñas` : "general";
+      return `
+      <article class="card ${s === "terminado" || s === "abandonado" ? "done" : ""}">
+        <div class="rank">#${g.rank}</div>
+        <img class="cover" src="${esc(g.cover)}" alt="Carátula de ${esc(g.title)}" loading="lazy">
+        <div class="body-col">
+          <div class="head">
+            <div>
+              <h2>${esc(g.title)}</h2>
+              <div class="meta">
+                <span class="chip">${esc(g.genre)}</span>
+                <span class="chip">${g.horas ? "~" + g.horas + " h" : "Sin final"}</span>
+                <span class="chip">Comprado ${fmtDate(g.comprado)}</span>
+                ${g.extraScore ? `<span class="chip">${esc(g.extraScore)}</span>` : ""}
+              </div>
+            </div>
+            <a class="scorebox" href="${mcUrl}" target="_blank" rel="noopener" title="Ver en Metacritic"><span class="score ${scoreClass(g.score)}">${g.score}</span><small>${scoreLabel}</small></a>
+          </div>
+          <p class="desc">${esc(g.desc)}</p>
+          ${g.switchNote ? `<p class="note">${esc(g.switchNote)}</p>` : ""}
+          <div class="pc">
+            <div class="pros"><h3>Lo bueno</h3><ul>${g.pros.map(p => `<li>${esc(p)}</li>`).join("")}</ul></div>
+            <div class="cons"><h3>Lo malo</h3><ul>${g.cons.map(p => `<li>${esc(p)}</li>`).join("")}</ul></div>
+          </div>
+          <div class="status">Estado:
+            <select data-id="${g.id}" aria-label="Estado de ${esc(g.title)}">
+              ${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === s ? "selected" : ""}>${v}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+      </article>`;
+    }).join("");
+  }
+
+  $("list").addEventListener("change", e => {
+    if (e.target.matches("select[data-id]")) {
+      statuses[e.target.dataset.id] = e.target.value; saveStatuses(); renderStats(); render();
+    }
+  });
+  ["q", "sort", "genre", "statusFilter", "hideEndless"].forEach(id => $(id).addEventListener("input", render));
+
+  renderStats(); render();
+})();
+</script>
+</body>
+</html>
