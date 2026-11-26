@@ -41,7 +41,13 @@
 
   .list { display: flex; flex-direction: column; gap: 14px; }
   .card { display: grid; grid-template-columns: 52px 150px 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
-  .card.done { opacity: .55; }
+  /* Estado del juego: franja de color en la tarjeta + etiqueta sobre la caja */
+  .card { --st: transparent; border-left: 5px solid var(--st); }
+  .card.st-jugando { --st: #2563eb; } .card.st-terminado { --st: #1f9d55; } .card.st-abandonado { --st: #6b6b76; }
+  .case-tag { position: absolute; left: -7%; right: -7%; bottom: 20%; z-index: 2; transform: rotate(-8deg);
+    background: var(--st); color: #fff; text-align: center; padding: 3.5cqw 0; font: 800 9cqw/1 system-ui, sans-serif;
+    letter-spacing: .06em; text-transform: uppercase; box-shadow: 0 3px 8px rgba(0,0,0,.4); border-top: 1px solid rgba(255,255,255,.35); }
+  .status select { border-left: 4px solid var(--st); }
   .rank { font-size: 26px; font-weight: 800; color: var(--muted); text-align: center; padding-top: 4px; }
   /* Caja de Nintendo Switch */
   .case { container-type: inline-size; position: relative; width: 150px; aspect-ratio: 105 / 170; align-self: start;
@@ -141,6 +147,7 @@
   const GAMES = window.GAMES;
   const STORE_KEY = "backlog-switch-status";
   const STATUS = { pendiente: "Pendiente", jugando: "Jugando", terminado: "Terminado", abandonado: "Abandonado" };
+  const STATUS_ICON = { jugando: "▶", terminado: "✓", abandonado: "✕" };
 
   let statuses = {};
   try { statuses = JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; } catch (e) { statuses = {}; }
@@ -200,7 +207,7 @@
       const mcUrl = `https://www.metacritic.com/game/${g.slug}/`;
       const scoreLabel = { switch: g.reviews ? `Switch · ${g.reviews} reseñas` : "Switch", coleccion: "colección Switch", general: "general", none: "sin nota" }[g.scoreSource];
       return `
-      <article class="card ${s === "terminado" || s === "abandonado" ? "done" : ""}">
+      <article class="card st-${s}">
         <div class="rank">#${g.rank}</div>
         <div class="case" style="--img:url('${esc(g.cover)}')">
           <div class="case-sheet">
@@ -210,6 +217,7 @@
               <div class="case-title">${esc(g.title)}</div>
             </div>
           </div>
+          ${s !== "pendiente" ? `<div class="case-tag">${STATUS_ICON[s]} ${STATUS[s]}</div>` : ""}
         </div>
         <div class="body-col">
           <div class="head">
