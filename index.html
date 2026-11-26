@@ -35,7 +35,25 @@
   .card { display: grid; grid-template-columns: 52px 150px 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
   .card.done { opacity: .55; }
   .rank { font-size: 26px; font-weight: 800; color: var(--muted); text-align: center; padding-top: 4px; }
-  .cover { width: 150px; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; background: var(--chip); }
+  /* Caja de Nintendo Switch */
+  .case { container-type: inline-size; position: relative; width: 150px; aspect-ratio: 105 / 170; align-self: start;
+    background: linear-gradient(90deg, #a8000c, #d4000f 8%, #d4000f 92%, #b0000d); border-radius: 7px; padding: 4px 4px 4px 6px;
+    box-shadow: 0 8px 18px rgba(0,0,0,.35), 0 2px 4px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.18);
+    transition: transform .25s ease; transform: perspective(700px) rotateY(0deg); }
+  .case:hover { transform: perspective(700px) rotateY(-12deg) translateY(-2px); }
+  .case::after { content: ""; position: absolute; inset: 0; border-radius: 7px; pointer-events: none;
+    background: linear-gradient(118deg, rgba(255,255,255,.32) 0%, rgba(255,255,255,.06) 28%, rgba(255,255,255,0) 45%, rgba(255,255,255,.08) 100%); }
+  .case-sheet { height: 100%; display: flex; flex-direction: column; border-radius: 3px; overflow: hidden; background: #111; }
+  .case-band { flex: none; height: 11.5%; background: #e60012; color: #fff; display: flex; align-items: center; justify-content: center;
+    gap: 4cqw; font: 800 7.2cqw/1 system-ui, sans-serif; letter-spacing: .04em; border-bottom: 1px solid rgba(0,0,0,.2); }
+  .case-logo { display: flex; gap: 1.2cqw; width: 9cqw; height: 9cqw; }
+  .case-logo i { flex: 1; border: 1.6cqw solid #fff; border-radius: 3cqw 0 0 3cqw; }
+  .case-logo i + i { background: #fff; border-radius: 0 3cqw 3cqw 0; }
+  .case-art { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; background: var(--img) center / cover; }
+  .case-art::before { content: ""; position: absolute; inset: -20px; background: inherit; filter: blur(16px) brightness(.55) saturate(1.2); }
+  .case-art img { position: relative; width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .case-title { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 4cqw 6cqw; color: #fff; font: 700 7.6cqw/1.2 system-ui, sans-serif; text-shadow: 0 1px 3px rgba(0,0,0,.7); overflow: hidden; }
   .head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; }
   .head h2 { margin: 0; font-size: 19px; line-height: 1.25; }
   .meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
@@ -60,7 +78,8 @@
     .controls { position: static; }
     .card { grid-template-columns: 90px 1fr; }
     .rank { display: none; }
-    .cover { width: 90px; }
+    .case { width: 96px; padding: 3px 3px 3px 4px; }
+    .case-title { font-size: 8.5cqw; }
     .pc { grid-template-columns: 1fr; }
     .head h2 { font-size: 17px; }
     .body-col { grid-column: 1 / -1; }
@@ -167,7 +186,15 @@
       return `
       <article class="card ${s === "terminado" || s === "abandonado" ? "done" : ""}">
         <div class="rank">#${g.rank}</div>
-        <img class="cover" src="${esc(g.cover)}" alt="Carátula de ${esc(g.title)}" loading="lazy">
+        <div class="case" style="--img:url('${esc(g.cover)}')">
+          <div class="case-sheet">
+            <div class="case-band"><span class="case-logo" aria-hidden="true"><i></i><i></i></span>NINTENDO SWITCH</div>
+            <div class="case-art">
+              <img src="${esc(g.cover)}" alt="Carátula de ${esc(g.title)}" loading="lazy">
+              <div class="case-title">${esc(g.title)}</div>
+            </div>
+          </div>
+        </div>
         <div class="body-col">
           <div class="head">
             <div>

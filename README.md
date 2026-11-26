@@ -2,7 +2,7 @@
 
 Web estática que ordena mis juegos digitales de Nintendo Switch por nota de Metacritic (versión Switch) para decidir qué jugar primero.
 
-Cada juego muestra carátula, descripción, lo bueno y lo malo, duración aproximada y un estado (Pendiente / Jugando / Terminado / Abandonado) que se guarda en el navegador.
+Cada juego muestra su carátula oficial de Nintendo dentro de una caja de Switch, descripción, lo bueno y lo malo, duración aproximada y un estado (Pendiente / Jugando / Terminado / Abandonado) que se guarda en el navegador.
 
 ## Uso
 
@@ -15,5 +15,5 @@ Abre http://localhost:8765.
 ## Datos
 
 - `data.js`: listado de juegos, notas, pros y contras (editable).
-- `covers/`: carátulas.
+- `box/`: carátulas oficiales (icono de la eShop de Nintendo), mostradas como caja de Switch.
 - Notas de Metacritic consultadas el 26/11/2026.
