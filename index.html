@@ -62,7 +62,7 @@
   .score { width: 58px; height: 58px; border-radius: 10px; color: #fff; display: grid; place-items: center; font-size: 24px; font-weight: 800; }
   .scorebox small { color: var(--muted); font-size: 11px; line-height: 1.2; text-align: center; }
   .card { min-width: 0; } .body-col { min-width: 0; }
-  .s-good { background: var(--good); } .s-mid { background: var(--mid); } .s-bad { background: var(--bad); }
+  .s-none { background: var(--muted); } .s-good { background: var(--good); } .s-mid { background: var(--mid); } .s-bad { background: var(--bad); }
   .desc { margin: 0 0 10px; }
   .note { font-size: 13px; color: var(--muted); border-left: 3px solid var(--mid); padding-left: 8px; margin: 0 0 10px; }
   .pc { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -111,6 +111,11 @@
       <option value="terminado">Terminado</option>
       <option value="abandonado">Abandonado</option>
     </select>
+    <select id="origin" aria-label="Origen">
+      <option value="">Comprados y otros</option>
+      <option value="compra">Solo comprados</option>
+      <option value="otros">Gratis / sin compra registrada</option>
+    </select>
     <label><input type="checkbox" id="hideEndless"> Ocultar juegos sin final</label>
   </section>
 
@@ -146,16 +151,18 @@
   });
 
   // Ranking fijo por nota (empates: más reseñas primero)
-  const ranked = [...GAMES].sort((a, b) => b.score - a.score || b.reviews - a.reviews);
+  const sc = g => g.score ?? -1;
+  const ranked = [...GAMES].sort((a, b) => sc(b) - sc(a) || (b.reviews || 0) - (a.reviews || 0));
   ranked.forEach((g, i) => g.rank = i + 1);
 
   function renderStats() {
     const pend = GAMES.filter(g => statusOf(g) === "pendiente" || statusOf(g) === "jugando");
     const hours = pend.reduce((a, g) => a + (g.horas || 0), 0);
-    const avg = Math.round(GAMES.reduce((a, g) => a + g.score, 0) / GAMES.length);
+    const scored = GAMES.filter(g => g.score != null);
+    const avg = Math.round(scored.reduce((a, g) => a + g.score, 0) / scored.length);
     const done = GAMES.filter(g => statusOf(g) === "terminado").length;
     $("stats").innerHTML = `
-      <div class="stat"><b>${GAMES.length}</b><span>juegos comprados</span></div>
+      <div class="stat"><b>${GAMES.length}</b><span>juegos digitales</span></div>
       <div class="stat"><b>${pend.length}</b><span>pendientes o jugando</span></div>
       <div class="stat"><b>~${hours} h</b><span>de backlog con final</span></div>
       <div class="stat"><b>${avg}</b><span>nota media</span></div>
@@ -164,25 +171,26 @@
 
   function render() {
     const q = $("q").value.trim().toLowerCase();
-    const genre = $("genre").value, st = $("statusFilter").value, hideEndless = $("hideEndless").checked;
+    const genre = $("genre").value, st = $("statusFilter").value, hideEndless = $("hideEndless").checked, origin = $("origin").value;
     let items = ranked.filter(g =>
       (!q || g.title.toLowerCase().includes(q)) &&
       (!genre || mainGenre(g) === genre) &&
       (!st || statusOf(g) === st) &&
-      (!hideEndless || g.horas)
+      (!hideEndless || g.horas) &&
+      (!origin || (origin === "compra") === !!g.comprado)
     );
     const sort = $("sort").value;
     const h = g => g.horas || 9999;
-    if (sort === "short") items.sort((a, b) => h(a) - h(b) || b.score - a.score);
-    if (sort === "recent") items.sort((a, b) => b.comprado.localeCompare(a.comprado));
-    if (sort === "value") items.sort((a, b) => (b.score / Math.sqrt(h(b))) - (a.score / Math.sqrt(h(a))));
+    if (sort === "short") items.sort((a, b) => h(a) - h(b) || sc(b) - sc(a));
+    if (sort === "recent") items.sort((a, b) => (b.comprado || "").localeCompare(a.comprado || ""));
+    if (sort === "value") items.sort((a, b) => (Math.max(sc(b), 0) / Math.sqrt(h(b))) - (Math.max(sc(a), 0) / Math.sqrt(h(a))));
 
     if (!items.length) { $("list").innerHTML = `<p class="empty">Ningún juego coincide con los filtros.</p>`; return; }
 
     $("list").innerHTML = items.map(g => {
       const s = statusOf(g);
       const mcUrl = `https://www.metacritic.com/game/${g.slug}/`;
-      const scoreLabel = g.scoreSource === "switch" ? `Switch · ${g.reviews} reseñas` : "general";
+      const scoreLabel = { switch: g.reviews ? `Switch · ${g.reviews} reseñas` : "Switch", coleccion: "colección Switch", general: "general", none: "sin nota" }[g.scoreSource];
       return `
       <article class="card ${s === "terminado" || s === "abandonado" ? "done" : ""}">
         <div class="rank">#${g.rank}</div>
@@ -202,11 +210,11 @@
               <div class="meta">
                 <span class="chip">${esc(g.genre)}</span>
                 <span class="chip">${g.horas ? "~" + g.horas + " h" : "Sin final"}</span>
-                <span class="chip">Comprado ${fmtDate(g.comprado)}</span>
+                <span class="chip">${g.comprado ? "Comprado " + fmtDate(g.comprado) : "No figura en compras"}</span>
                 ${g.extraScore ? `<span class="chip">${esc(g.extraScore)}</span>` : ""}
               </div>
             </div>
-            <a class="scorebox" href="${mcUrl}" target="_blank" rel="noopener" title="Ver en Metacritic"><span class="score ${scoreClass(g.score)}">${g.score}</span><small>${scoreLabel}</small></a>
+            <a class="scorebox" href="${mcUrl}" target="_blank" rel="noopener" title="Ver en Metacritic"><span class="score ${g.score == null ? "s-none" : scoreClass(g.score)}">${g.score ?? "–"}</span><small>${scoreLabel}</small></a>
           </div>
           <p class="desc">${esc(g.desc)}</p>
           ${g.switchNote ? `<p class="note">${esc(g.switchNote)}</p>` : ""}
@@ -229,7 +237,7 @@
       statuses[e.target.dataset.id] = e.target.value; saveStatuses(); renderStats(); render();
     }
   });
-  ["q", "sort", "genre", "statusFilter", "hideEndless"].forEach(id => $(id).addEventListener("input", render));
+  ["q", "sort", "genre", "statusFilter", "origin", "hideEndless"].forEach(id => $(id).addEventListener("input", render));
 
   renderStats(); render();
 })();

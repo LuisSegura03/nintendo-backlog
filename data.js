@@ -1,5 +1,7 @@
 // Datos del backlog. Notas de Metacritic consultadas el 26/11/2026 (versión Nintendo Switch).
-// scoreSource: "switch" = metascore propio de Switch; "general" = Switch sin metascore, se usa el general.
+// scoreSource: "switch" = metascore propio de Switch; "general" = Switch sin metascore, se usa el general;
+//   "coleccion" = nota de la colección de Switch que lo incluye; "none" = sin nota.
+// comprado: null = está en tus tarjetas de juego virtuales pero no en el historial de compras.
 // reviews = nº de reseñas de críticos de la versión Switch.
 // cover = icono oficial de la eShop de Nintendo (Metro Redux usa el de Metro 2033 Redux; el pack no tiene uno propio).
 // horas = duración aproximada de la historia principal (+ algo de extras). null = juego sin final (online / competitivo).
@@ -203,5 +205,207 @@ window.GAMES = [
     desc: "Thriller psicológico de Remedy. El escritor Alan Wake busca a su esposa desaparecida en Bright Falls y combate a los Poseídos con linterna y pistola mientras su novela se hace realidad.",
     pros: ["Atmósfera de serie de TV estilo Twin Peaks", "Mecánica de luz y sombra original", "Incluye las dos expansiones", "Narrativa por episodios muy enganchante"],
     cons: ["El port de Switch tiene recortes técnicos notables (por eso la nota baja)", "Combate repetitivo", "Mucho bosque nocturno parecido entre sí", "Pocas reseñas de Switch: nota poco representativa"]
+  },
+  // ---- Juegos que están en tus tarjetas de juego virtuales pero no en el historial de compras
+  //      (gratuitos, canjeados con código o comprados antes de lo que muestra el historial) ----
+  {
+    id: "portal", title: "Portal", cover: "box/portal.jpg", year: 2022,
+    score: 95, scoreSource: "coleccion", reviews: 10, generalScore: 95, switchNote: "Nota de Portal: Companion Collection en Switch (Portal + Portal 2).",
+    genre: "Puzle", horas: 4, comprado: null, slug: "portal-companion-collection",
+    desc: "Clásico de Valve: con la pistola de portales recorres las cámaras de prueba de Aperture Science mientras GLaDOS, una IA con un humor muy negro, te 'anima' a seguir.",
+    pros: ["Mecánica de portales genial y muy original", "GLaDOS es de los mejores villanos de los videojuegos", "Corto y sin relleno", "El port de Switch es excelente"],
+    cons: ["Se termina en una tarde", "Al ser de 2007, visualmente se nota su edad", "Poco contenido más allá de la historia y los retos"]
+  },
+  {
+    id: "portal2", title: "Portal 2", cover: "box/portal-2.jpg", year: 2022,
+    score: 95, scoreSource: "coleccion", reviews: 10, generalScore: 95, switchNote: "Nota de Portal: Companion Collection en Switch (Portal + Portal 2).",
+    genre: "Puzle", horas: 10, comprado: null, slug: "portal-companion-collection",
+    desc: "Secuela mucho más ambiciosa: más mecánicas (geles, puentes de luz, rayos de tracción), una historia con Wheatley y GLaDOS, y una campaña cooperativa aparte.",
+    pros: ["Considerado uno de los mejores juegos de puzles de la historia", "Guion y humor brillantes (Wheatley, Cave Johnson)", "Campaña cooperativa para dos, en pantalla dividida u online", "Puzles muy ingeniosos y bien dosificados"],
+    cons: ["Algunos puzles de la parte final son más largos que difíciles", "Cargas frecuentes entre zonas", "Conviene jugar antes el primero"]
+  },
+  {
+    id: "hades", title: "Hades", cover: "box/hades.jpg", year: 2020,
+    score: 93, scoreSource: "switch", reviews: 48, generalScore: 93,
+    genre: "Roguelike / Acción", horas: 25, comprado: null, slug: "hades",
+    desc: "Roguelike de Supergiant en el que Zagreo, hijo de Hades, intenta escapar del inframundo. Cada intento es distinto gracias a las bendiciones de los dioses del Olimpo.",
+    pros: ["Combate rapidísimo y muy satisfactorio", "Cada muerte avanza la historia: nunca sientes que pierdes el tiempo", "Personajes, doblaje y arte excelentes", "Muchísima variedad de armas y combinaciones", "Perfecto en portátil para partidas cortas"],
+    cons: ["La estructura repetitiva de roguelike no gusta a todos", "Ver el final real requiere muchas escapadas", "Puede ser difícil al principio (hay modo Dios para suavizarlo)"]
+  },
+  {
+    id: "inside", title: "INSIDE", cover: "box/inside.jpg", year: 2018,
+    score: 91, scoreSource: "switch", reviews: 30, generalScore: 93,
+    genre: "Plataformas / Puzle", horas: 4, comprado: null, slug: "inside",
+    desc: "De los creadores de LIMBO. Un niño huye de guardias y perros por un mundo distópico e inquietante, resolviendo puzles ambientales sin una sola palabra.",
+    pros: ["Atmósfera y dirección artística sobresalientes", "Animaciones muy cuidadas", "Puzles inteligentes que nunca se atascan demasiado", "Final de los más comentados de los indies"],
+    cons: ["Muy corto", "Poca rejugabilidad aparte del final secreto", "Algunas muertes por ensayo y error"]
+  },
+  {
+    id: "walkingdead", title: "The Walking Dead (Telltale)", cover: "box/walking-dead.jpg", year: 2018,
+    score: 89, scoreSource: "general", reviews: 0, generalScore: 89, switchNote: "Sin metascore propio en Switch; 89 es la nota general de la temporada 1.",
+    genre: "Aventura narrativa", horas: 13, comprado: null, slug: "the-walking-dead-a-telltale-games-series",
+    desc: "Aventura de Telltale en el universo de The Walking Dead. Lee, un condenado, protege a la pequeña Clementine durante el apocalipsis zombi tomando decisiones difíciles.",
+    pros: ["Historia y personajes muy emotivos", "La relación Lee–Clementine es inolvidable", "Las decisiones bajo presión crean mucha tensión", "Ideal para jugar por episodios"],
+    cons: ["Casi no hay jugabilidad: es más una película interactiva", "Las decisiones cambian menos de lo que parece", "Motor gráfico anticuado y con tirones"]
+  },
+  {
+    id: "bioshock", title: "BioShock Remastered", cover: "box/bioshock.jpg", year: 2020,
+    score: 84, scoreSource: "coleccion", reviews: 35, generalScore: 84, switchNote: "Nota de BioShock: The Collection en Switch (los tres juegos).",
+    genre: "Shooter", horas: 13, comprado: null, slug: "bioshock-the-collection",
+    desc: "Shooter en primera persona en Rapture, una ciudad submarina utópica que se ha venido abajo. Combina armas y plásmidos (poderes) contra sus habitantes enloquecidos.",
+    pros: ["Ambientación art déco legendaria", "Uno de los giros de guion más famosos del medio", "Combinar plásmidos y armas da mucha libertad", "Incluye el DLC y extras"],
+    cons: ["El último tercio baja de nivel", "Controles con mando algo rígidos", "El hackeo se vuelve repetitivo"]
+  },
+  {
+    id: "bioshock2", title: "BioShock 2 Remastered", cover: "box/bioshock-2.jpg", year: 2020,
+    score: 84, scoreSource: "coleccion", reviews: 35, generalScore: 84, switchNote: "Nota de BioShock: The Collection en Switch (los tres juegos).",
+    genre: "Shooter", horas: 11, comprado: null, slug: "bioshock-the-collection",
+    desc: "Vuelves a Rapture como un Big Daddy, el primero de su tipo, buscando a tu Little Sister. Incluye la expansión Minerva's Den, muy bien valorada.",
+    pros: ["Mejor combate que el primero (doble empuñadura armas + plásmidos)", "Historia más personal y emotiva", "Minerva's Den es de los mejores DLC de la saga"],
+    cons: ["Menos sorprendente al repetir ciudad", "Las defensas de Little Sisters se repiten mucho", "Inicio algo lento"]
+  },
+  {
+    id: "bioshockinf", title: "BioShock Infinite: The Complete Edition", cover: "box/bioshock-infinite.jpg", year: 2020,
+    score: 84, scoreSource: "coleccion", reviews: 35, generalScore: 94, switchNote: "Nota de BioShock: The Collection en Switch. El original de 2013 tiene un 94.",
+    genre: "Shooter", horas: 15, comprado: null, slug: "bioshock-the-collection",
+    desc: "Booker DeWitt viaja a Columbia, una ciudad flotante de 1912, para rescatar a Elizabeth. Incluye el DLC Panteón Marino, que conecta con Rapture.",
+    pros: ["Columbia es un escenario espectacular", "Elizabeth es una compañera excelente", "Historia y final que dan mucho que pensar", "Los raíles aéreos dan un combate muy dinámico"],
+    cons: ["Tiroteos más genéricos que en los anteriores", "Solo puedes llevar dos armas", "Algunos temas se tratan con poca profundidad"]
+  },
+  {
+    id: "limbo", title: "LIMBO", cover: "box/limbo.jpg", year: 2018,
+    score: 83, scoreSource: "switch", reviews: 27, generalScore: 90,
+    genre: "Plataformas / Puzle", horas: 4, comprado: null, slug: "limbo",
+    desc: "Un niño busca a su hermana en un mundo en blanco y negro lleno de trampas mortales y arañas gigantes. El predecesor de INSIDE.",
+    pros: ["Estilo visual en silueta inolvidable", "Atmósfera muy inquietante", "Puzles físicos ingeniosos", "Se termina en una tarde"],
+    cons: ["Mucho ensayo y error (mueres sin aviso)", "El último tramo baja de nivel", "Historia muy abierta a interpretación"]
+  },
+  {
+    id: "fortnite", title: "Fortnite", cover: "box/fortnite.jpg", year: 2018,
+    score: 83, scoreSource: "switch", reviews: 10, generalScore: 78,
+    genre: "Battle royale / Online", horas: null, comprado: null, slug: "fortnite",
+    desc: "El battle royale gratuito de Epic: 100 jugadores, construcción y temporadas constantes, además de modos como LEGO Fortnite, Rocket Racing y Festival.",
+    pros: ["Gratis y con contenido nuevo cada temporada", "Muchos modos además del battle royale", "Crossplay y progreso compartido con otras plataformas", "Colaboraciones con todo tipo de franquicias"],
+    cons: ["En Switch rinde peor (resolución baja y 30 fps)", "Muy enfocado a la tienda de skins", "La construcción tiene una curva de aprendizaje muy alta", "Sin final: no es backlog"]
+  },
+  {
+    id: "legoskywalker", title: "LEGO Star Wars: The Skywalker Saga", cover: "box/lego-skywalker.jpg", year: 2022,
+    score: 82, scoreSource: "switch", reviews: 17, generalScore: 82,
+    genre: "Acción / Aventura", horas: 25, comprado: null, slug: "lego-star-wars-the-skywalker-saga",
+    desc: "Las nueve películas de Star Wars en versión LEGO, con un motor nuevo, cámara en tercera persona y planetas abiertos para explorar.",
+    pros: ["Las nueve películas en un solo juego", "Humor LEGO muy divertido", "Enorme cantidad de personajes y coleccionables", "Ideal para jugar en cooperativo local"],
+    cons: ["En Switch hay recortes gráficos y cargas largas", "Los coleccionables pueden hacerse repetitivos", "El combate es sencillo"]
+  },
+  {
+    id: "sky", title: "Sky: Children of the Light", cover: "box/sky.jpg", year: 2021,
+    score: 82, scoreSource: "switch", reviews: 13, generalScore: 82,
+    genre: "Aventura social / Online", horas: null, comprado: null, slug: "sky-children-of-the-light",
+    desc: "Aventura social gratuita de los creadores de Journey. Vuelas por reinos en las nubes con otros jugadores, devolviendo la luz a las estrellas.",
+    pros: ["Precioso y muy relajante", "Una comunidad muy amable y cooperativa", "Gratis, con eventos y temporadas", "Música preciosa"],
+    cons: ["Muchos objetos cosméticos de pago", "Rendimiento algo justo en Switch", "Sin un final claro: es más un servicio que una aventura"]
+  },
+  {
+    id: "fallguys", title: "Fall Guys", cover: "box/fall-guys.jpg", year: 2022,
+    score: 81, scoreSource: "general", reviews: 2, generalScore: 81, switchNote: "La versión de Switch solo tiene 2 reseñas; 81 es la nota general.",
+    genre: "Party / Online", horas: null, comprado: null, slug: "fall-guys",
+    desc: "Party game gratuito: hasta 40 'judías' compiten en pruebas absurdas eliminatorias hasta que solo queda uno con la corona.",
+    pros: ["Muy divertido y fácil de entender", "Gratis con crossplay", "Partidas cortas", "Creador de niveles con contenido de la comunidad"],
+    cons: ["Mucha suerte y caos: puede frustrar", "La tienda tiene mucho peso", "Se vuelve repetitivo", "Sin final"]
+  },
+  {
+    id: "littlenightmares", title: "Little Nightmares", cover: "box/little-nightmares.jpg", year: 2018,
+    score: 79, scoreSource: "switch", reviews: null, generalScore: 78, switchNote: "Nota de Little Nightmares: Complete Edition en Switch (incluye el DLC).",
+    genre: "Plataformas / Terror", horas: 6, comprado: null, slug: "little-nightmares-complete-edition",
+    desc: "Six, una niña con chubasquero amarillo, intenta escapar de las Fauces, un barco lleno de criaturas grotescas. Terror de plataformas y sigilo con estética de cuento macabro.",
+    pros: ["Dirección artística y atmósfera brillantes", "Enemigos memorables y muy inquietantes", "Corto e intenso", "La Complete Edition incluye la expansión"],
+    cons: ["Muy corto", "Saltos con la profundidad a veces imprecisos", "Muertes por ensayo y error"]
+  },
+  {
+    id: "palia", title: "Palia", cover: "box/palia.jpg", year: 2023,
+    score: 77, scoreSource: "general", reviews: 2, generalScore: 77, switchNote: "La versión de Switch solo tiene 2 reseñas; 77 es la nota general.",
+    genre: "Simulación social / Online", horas: null, comprado: null, slug: "palia",
+    desc: "Simulador de vida online y gratuito: decoras tu parcela, cultivas, cocinas, pescas, cazas y haces amistad con los habitantes del pueblo, junto a otros jugadores.",
+    pros: ["Muy acogedor, en la línea de Stardew Valley", "Gratis y sin muros de pago para progresar", "Personajes con historias propias", "Se puede jugar en grupo"],
+    cons: ["En Switch rinde y se ve bastante peor que en PC", "Requiere conexión siempre", "Bastante grind en las profesiones", "Sin final"]
+  },
+  {
+    id: "lucky", title: "New Super Lucky's Tale", cover: "box/super-luckys-tale.jpg", year: 2019,
+    score: 76, scoreSource: "switch", reviews: 28, generalScore: 76,
+    genre: "Plataformas 3D", horas: 12, comprado: null, slug: "new-super-luckys-tale",
+    desc: "Plataformas 3D colorido protagonizado por Lucky, un zorro que recorre el Libro de las Eras. Mezcla niveles 3D, 2D y pequeños puzles.",
+    pros: ["Encantador y muy colorido", "Buen control y variedad de niveles", "Apto para todos los públicos", "Muy pulido en Switch"],
+    cons: ["Fácil para jugadores con experiencia", "Poco original frente a los grandes del género", "Humor que puede resultar infantil"]
+  },
+  {
+    id: "xenoverse2", title: "Dragon Ball Xenoverse 2", cover: "box/xenoverse-2.jpg", year: 2017,
+    score: 75, scoreSource: "switch", reviews: 32, generalScore: 72,
+    genre: "Lucha / RPG", horas: 30, comprado: null, slug: "dragon-ball-xenoverse-2",
+    desc: "Creas tu propio guerrero como Patrullero del Tiempo y corriges alteraciones en la historia de Dragon Ball. Combate 3D en arenas, misiones y una ciudad central online.",
+    pros: ["Crear y personalizar tu propio personaje", "Recorre toda la historia de Dragon Ball", "Enorme cantidad de personajes y técnicas", "Contenido y actualizaciones durante años"],
+    cons: ["Combate algo caótico y repetitivo", "Muchísimo farmeo para conseguir objetos", "Mucho contenido detrás de DLC", "Rendimiento irregular en Switch"]
+  },
+  {
+    id: "legohp", title: "LEGO Harry Potter Collection", cover: "box/lego-harry-potter.jpg", year: 2018,
+    score: 73, scoreSource: "switch", reviews: 10, generalScore: 73,
+    genre: "Acción / Aventura", horas: 30, comprado: null, slug: "lego-harry-potter-collection",
+    desc: "LEGO Harry Potter Años 1-4 y Años 5-7 remasterizados: las ocho películas en clave LEGO con Hogwarts para explorar y cientos de coleccionables.",
+    pros: ["Dos juegos completos", "Hogwarts en versión LEGO es una delicia para fans", "Cooperativo local", "Humor muy logrado"],
+    cons: ["Remaster con pocas mejoras", "Cámara y saltos a veces torpes", "Mucho 'busca el ladrillo' repetitivo"]
+  },
+  {
+    id: "ashen", title: "Ashen", cover: "box/ashen.jpg", year: 2019,
+    score: 71, scoreSource: "switch", reviews: 4, generalScore: 78, switchNote: "Solo 4 reseñas en Switch; la nota general es 78.",
+    genre: "Acción RPG / Soulslike", horas: 20, comprado: null, slug: "ashen",
+    desc: "Soulslike de mundo abierto con estética minimalista. Exploras un mundo sin luz, reconstruyes un asentamiento y te acompañan otros jugadores que aparecen como aliados.",
+    pros: ["Estilo artístico muy personal", "El sistema de compañeros (online o IA) es original", "Más accesible que otros soulslike", "Construir el poblado da sensación de progreso"],
+    cons: ["El port de Switch tiene recortes técnicos", "Variedad de enemigos y armas limitada", "Mazmorras muy oscuras y algo confusas"]
+  },
+  {
+    id: "unite", title: "Pokémon UNITE", cover: "box/pokemon-unite.jpg", year: 2021,
+    score: 70, scoreSource: "switch", reviews: 31, generalScore: 70,
+    genre: "MOBA / Online", horas: null, comprado: null, slug: "pokemon-unite",
+    desc: "MOBA gratuito de Pokémon: equipos de 5 contra 5 capturan Pokémon salvajes y anotan puntos en las porterías rivales en partidas de unos 10 minutos.",
+    pros: ["Partidas cortas y accesibles", "Gratis y con crossplay con móvil", "Buena introducción a los MOBA", "Muchos Pokémon jugables"],
+    cons: ["Monetización agresiva (objetos que dan ventaja, licencias)", "Equilibrio de personajes discutido", "Partidas clasificatorias frustrantes", "Sin final"]
+  },
+  {
+    id: "speedstorm", title: "Disney Speedstorm", cover: "box/speedstorm.jpg", year: 2023,
+    score: 66, scoreSource: "switch", reviews: 5, generalScore: 74,
+    genre: "Carreras arcade / Online", horas: null, comprado: null, slug: "disney-speedstorm",
+    desc: "Carreras de karts gratuitas con personajes de Disney y Pixar, cada uno con habilidades propias, en circuitos inspirados en sus películas.",
+    pros: ["Muchos personajes de Disney y Pixar", "Conducción con derrapes y habilidades más técnica de lo que parece", "Gratis con crossplay", "Temporadas con contenido nuevo"],
+    cons: ["En Switch se ve y rinde peor", "Desbloquear personajes requiere mucho grind o pagar", "Sin final"]
+  },
+  {
+    id: "jedioutcast", title: "Star Wars Jedi Knight II: Jedi Outcast", cover: "box/jedi-outcast.jpg", year: 2019,
+    score: 64, scoreSource: "switch", reviews: 11, generalScore: 89, switchNote: "El original de 2002 tiene un 89; el port de Switch salió peor valorado por sus controles.",
+    genre: "Shooter / Acción", horas: 12, comprado: null, slug: "star-wars-jedi-knight-ii-jedi-outcast",
+    desc: "Clásico de 2002: Kyle Katarn recupera sus poderes Jedi. Empieza como shooter y evoluciona a combates con sable de luz y poderes de la Fuerza.",
+    pros: ["Combate con sable de luz que sigue siendo muy bueno", "Poderes de la Fuerza muy divertidos", "Un clásico de Star Wars", "Historia sólida del Universo Expandido"],
+    cons: ["El port tiene controles torpes con mando", "Primeros niveles lentos y con laberintos", "Gráficos muy anticuados"]
+  },
+  {
+    id: "falloutshelter", title: "Fallout Shelter", cover: "box/fallout-shelter.jpg", year: 2018,
+    score: 61, scoreSource: "switch", reviews: 4, generalScore: 71, switchNote: "Solo 4 reseñas en Switch; la nota general es 71.",
+    genre: "Gestión", horas: null, comprado: null, slug: "fallout-shelter",
+    desc: "Gestionas un refugio de Fallout: construyes salas, asignas habitantes, administras recursos y mandas exploradores al páramo.",
+    pros: ["Gratis y adictivo al principio", "Humor y estética de Fallout", "Ideal para ratos muy cortos"],
+    cons: ["Repetitivo pasadas unas horas", "Pensado para móvil: en Switch los controles son peores", "Poca profundidad de gestión", "Sin final"]
+  },
+  {
+    id: "hunters", title: "Star Wars: Hunters", cover: "box/sw-hunters.jpg", year: 2024,
+    score: 56, scoreSource: "switch", reviews: 11, generalScore: 56,
+    genre: "Shooter / Online", horas: null, comprado: null, slug: "star-wars-hunters",
+    desc: "Shooter de arena 4 contra 4 gratuito, con personajes originales del universo Star Wars, cada uno con habilidades propias.",
+    pros: ["Gratis", "Estética Star Wars bien lograda", "Partidas cortas"],
+    cons: ["Poco contenido y modos", "Monetización muy presente", "Sus servidores tenían cierre anunciado: comprueba si aún funciona", "Sin final"]
+  },
+  {
+    id: "7daysheroes", title: "7 Days Heroes", cover: "box/7-days-heroes.jpg", year: 2024,
+    score: null, scoreSource: "none", reviews: 0, generalScore: null, switchNote: "No tiene ninguna nota en Metacritic.",
+    genre: "Plataformas", horas: 6, comprado: null, slug: "7-days-heroes",
+    desc: "Plataformas 2D de estilo retro: una IA llamada MAI convierte a la población en zombis y tres héroes con habilidades especiales (y su perro) intentan detenerla a lo largo de 30 niveles.",
+    pros: ["Cambias entre 4 personajes con habilidades distintas", "Estilo retro", "Corto: 30 niveles en 7 zonas"],
+    cons: ["Sin reseñas de crítica que respalden su calidad", "Juego pequeño y de bajo presupuesto", "La duración es una estimación"]
   }
 ];
