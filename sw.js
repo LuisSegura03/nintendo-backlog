@@ -3,7 +3,7 @@
 // (y se guarda en caché); sin internet se sirve lo último guardado.
 // "no-cache" obliga a preguntar al servidor si hay cambios, saltándose la
 // caché HTTP del navegador (GitHub Pages la deja 10 minutos).
-const CACHE = "backlog-v2";
+const CACHE = "backlog-v3";
 const SHELL = ["./", "index.html", "data.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", e => {

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mi Backlog Switch</title>
-<meta name="theme-color" content="#e60012">
+<title>Mi Estantería Switch</title>
+<meta name="theme-color" content="#2b1c13">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/favicon-64.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -14,248 +14,284 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
   :root {
-    --bg: #f4f4f6; --surface: #ffffff; --text: #18181b; --muted: #6b6b76; --border: #e2e2e8;
-    --accent: #e60012; --chip: #f0f0f3;
-    --good: #1f9d55; --mid: #d4a20b; --bad: #d93838;
+    --wall-1: #2b1c13; --wall-2: #1d130d; --panel-line: rgba(0,0,0,.25);
+    --wood-top: #b07a45; --wood-front-1: #8a5a2e; --wood-front-2: #6a421f; --wood-edge: #4a2c14;
+    --text: #f6ede4; --muted: #c9b6a4; --chip: rgba(255,255,255,.08); --chip-on: #f6ede4; --chip-on-text: #2b1c13;
+    --plate-1: #d9b560; --plate-2: #a8833a; --plate-text: #3a2a0e;
+    --sheet: #fbf7f2; --sheet-text: #1f1712; --sheet-muted: #6f625a; --sheet-border: #e8dfd6;
+    --good: #1f9d55; --mid: #d4a20b; --bad: #d93838; --none: #8a8178;
+    --jugando: #2563eb; --terminado: #1f9d55; --abandonado: #6b6b76;
+    --red: #e60012;
   }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg: #111114; --surface: #1b1b20; --text: #ececf1; --muted: #9a9aa6; --border: #2c2c34; --chip: #26262d; }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --wall-1: #efe4d6; --wall-2: #e2d3c0; --panel-line: rgba(120,80,40,.10);
+      --wood-top: #d6a66e; --wood-front-1: #b98450; --wood-front-2: #9a6a3b; --wood-edge: #7a5028;
+      --text: #2b1c13; --muted: #7a6656; --chip: rgba(60,30,10,.07); --chip-on: #2b1c13; --chip-on-text: #fff;
+    }
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  header { background: var(--accent); color: #fff; padding: calc(20px + env(safe-area-inset-top)) 16px 20px; }
-  header .wrap { max-width: 1000px; margin: 0 auto; }
-  header h1 { margin: 0; font-size: 24px; }
-  header p { margin: 4px 0 0; opacity: .9; font-size: 14px; }
-  main { max-width: 1000px; margin: 0 auto; padding: 16px; }
+  html { background: var(--wall-2); }
+  body { margin: 0; color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; min-height: 100vh;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 159px, var(--panel-line) 159px 160px),
+      linear-gradient(180deg, var(--wall-1), var(--wall-2)); }
 
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
-  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
-  .stat b { display: block; font-size: 22px; }
-  .stat span { color: var(--muted); font-size: 13px; }
+  /* Cabecera */
+  header { max-width: 1100px; margin: 0 auto; padding: calc(22px + env(safe-area-inset-top)) 16px 8px; display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px 20px; }
+  h1 { margin: 0; font-size: 26px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
+  h1 .logo { width: 30px; height: 30px; border-radius: 8px; background: var(--red); display: grid; place-items: center; }
+  h1 .logo span { display: flex; gap: 2px; width: 14px; height: 15px; }
+  h1 .logo i { flex: 1; border: 2px solid #fff; border-radius: 4px 0 0 4px; } h1 .logo i + i { background: #fff; border-radius: 0 4px 4px 0; }
+  .stats { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--muted); font-size: 13.5px; }
+  .stats b { color: var(--text); font-size: 15px; }
 
-  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 16px; position: sticky; top: 0; z-index: 5; }
-  .controls input[type=search], .controls select { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; font: inherit; }
-  .controls input[type=search] { flex: 1 1 180px; }
-  .controls label { display: flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); }
+  /* Barra de filtros */
+  .toolbar { max-width: 1100px; margin: 0 auto; padding: 8px 16px 4px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 0; background: var(--chip); color: var(--text); padding: 6px 12px; border-radius: 999px; font: 500 13.5px system-ui, sans-serif; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-text); }
+  .sep { width: 1px; height: 22px; background: var(--chip); margin: 0 4px; }
+  .search { flex: 1 1 160px; max-width: 260px; margin-left: auto; background: var(--chip); border: 0; color: var(--text); border-radius: 999px; padding: 7px 14px; font: inherit; }
+  .search::placeholder { color: var(--muted); }
 
-  .list { display: flex; flex-direction: column; gap: 14px; }
-  .card { display: grid; grid-template-columns: 52px 150px 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
-  /* Estado del juego: franja de color en la tarjeta + etiqueta sobre la caja */
-  .card { --st: transparent; border-left: 5px solid var(--st); }
-  .card.st-jugando { --st: #2563eb; } .card.st-terminado { --st: #1f9d55; } .card.st-abandonado { --st: #6b6b76; }
-  .case-tag { position: absolute; left: -7%; right: -7%; bottom: 20%; z-index: 2; transform: rotate(-8deg);
-    background: var(--st); color: #fff; text-align: center; padding: 3.5cqw 0; font: 800 9cqw/1 system-ui, sans-serif;
-    letter-spacing: .06em; text-transform: uppercase; box-shadow: 0 3px 8px rgba(0,0,0,.4); border-top: 1px solid rgba(255,255,255,.35); }
-  .status select { border-left: 4px solid var(--st); }
-  .rank { font-size: 26px; font-weight: 800; color: var(--muted); text-align: center; padding-top: 4px; }
-  /* Caja de Nintendo Switch */
-  .case { container-type: inline-size; position: relative; width: 150px; aspect-ratio: 105 / 170; align-self: start;
-    background: linear-gradient(90deg, #a8000c, #d4000f 8%, #d4000f 92%, #b0000d); border-radius: 7px; padding: 4px 4px 4px 6px;
-    box-shadow: 0 8px 18px rgba(0,0,0,.35), 0 2px 4px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.18);
-    transition: transform .25s ease; transform: perspective(700px) rotateY(0deg); }
-  .case:hover { transform: perspective(700px) rotateY(-12deg) translateY(-2px); }
-  .case::after { content: ""; position: absolute; inset: 0; border-radius: 7px; pointer-events: none;
-    background: linear-gradient(118deg, rgba(255,255,255,.32) 0%, rgba(255,255,255,.06) 28%, rgba(255,255,255,0) 45%, rgba(255,255,255,.08) 100%); }
-  .case-sheet { height: 100%; display: flex; flex-direction: column; border-radius: 3px; overflow: hidden; background: #111; }
-  .case-band { flex: none; height: 11.5%; background: #e60012; color: #fff; display: flex; align-items: center; justify-content: center;
-    gap: 4cqw; font: 800 7.2cqw/1 system-ui, sans-serif; letter-spacing: .04em; border-bottom: 1px solid rgba(0,0,0,.2); }
-  .case-logo { display: flex; gap: 1.2cqw; width: 9cqw; height: 9cqw; }
-  .case-logo i { flex: 1; border: 1.6cqw solid #fff; border-radius: 3cqw 0 0 3cqw; }
-  .case-logo i + i { background: #fff; border-radius: 0 3cqw 3cqw 0; }
-  .case-art { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; background: var(--img) center / cover; }
-  .case-art::before { content: ""; position: absolute; inset: -20px; background: inherit; filter: blur(16px) brightness(.55) saturate(1.2); }
-  .case-art img { position: relative; width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
-  .case-title { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; text-align: center;
-    padding: 4cqw 6cqw; color: #fff; font: 700 7.6cqw/1.2 system-ui, sans-serif; text-shadow: 0 1px 3px rgba(0,0,0,.7); overflow: hidden; }
-  .head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; }
-  .head h2 { margin: 0; font-size: 19px; line-height: 1.25; }
-  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
-  .chip { background: var(--chip); color: var(--muted); border-radius: 999px; padding: 2px 10px; font-size: 12.5px; }
-  .scorebox { flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 78px; text-decoration: none; }
-  .score { width: 58px; height: 58px; border-radius: 10px; color: #fff; display: grid; place-items: center; font-size: 24px; font-weight: 800; }
-  .scorebox small { color: var(--muted); font-size: 11px; line-height: 1.2; text-align: center; }
-  .card { min-width: 0; } .body-col { min-width: 0; }
-  .s-none { background: var(--muted); } .s-good { background: var(--good); } .s-mid { background: var(--mid); } .s-bad { background: var(--bad); }
+  /* Estantería */
+  main { max-width: 1100px; margin: 0 auto; padding: 8px 16px 40px; }
+  .shelf { margin-top: 26px; }
+  .plate { display: inline-flex; align-items: baseline; gap: 8px; margin: 0 0 10px 6px; padding: 5px 14px; border-radius: 4px;
+    background: linear-gradient(180deg, var(--plate-1), var(--plate-2)); color: var(--plate-text); font-weight: 800; font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.4); letter-spacing: .02em; }
+  .plate small { font-weight: 600; opacity: .75; }
+  .row { position: relative; padding: 0 18px; }
+  .games { display: flex; align-items: flex-end; gap: var(--gap); min-height: 40px; padding-top: 14px; }
+  .plank { height: 22px; margin: 0 -2px; border-radius: 2px; position: relative;
+    background: linear-gradient(180deg, var(--wood-top) 0 5px, var(--wood-front-1) 5px, var(--wood-front-2));
+    box-shadow: 0 10px 18px rgba(0,0,0,.45), inset 0 -2px 0 var(--wood-edge); }
+  .plank::after { content: ""; position: absolute; inset: 5px 0 0; opacity: .25; border-radius: 0 0 2px 2px;
+    background: repeating-linear-gradient(92deg, transparent 0 38px, rgba(0,0,0,.25) 38px 40px, transparent 40px 90px); }
+  .row + .row { margin-top: 18px; }
+
+  /* Caja de juego */
+  .game { --w: var(--case-w); container-type: inline-size; position: relative; width: var(--w); flex: none; border: 0; padding: 0; background: none; cursor: pointer;
+    transition: transform .2s ease; transform-origin: bottom center; }
+  .game:hover, .game:focus-visible { transform: translateY(-10px) rotate(-1.5deg); outline: none; }
+  .game:focus-visible .case { box-shadow: 0 0 0 3px #fff, 0 8px 18px rgba(0,0,0,.5); }
+  .case { container-type: inline-size; position: relative; width: 100%; aspect-ratio: 105 / 170;
+    background: linear-gradient(90deg, #a8000c, #d4000f 8%, #d4000f 92%, #b0000d); border-radius: 6px; padding: 3px 3px 3px 5px;
+    box-shadow: 0 8px 14px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.18); }
+  .case::after { content: ""; position: absolute; inset: 0; border-radius: 6px; pointer-events: none;
+    background: linear-gradient(118deg, rgba(255,255,255,.3) 0%, rgba(255,255,255,.05) 28%, transparent 45%, rgba(255,255,255,.07) 100%); }
+  .sheet { height: 100%; display: flex; flex-direction: column; border-radius: 3px; overflow: hidden; background: #111; }
+  .band { flex: none; height: 11.5%; background: var(--red); color: #fff; display: flex; align-items: center; justify-content: center; gap: 4cqw;
+    font: 800 7cqw/1 system-ui, sans-serif; letter-spacing: .04em; }
+  .band .l { display: flex; gap: 1.2cqw; width: 9cqw; height: 9cqw; }
+  .band .l i { flex: 1; border: 1.6cqw solid #fff; border-radius: 3cqw 0 0 3cqw; } .band .l i + i { background: #fff; border-radius: 0 3cqw 3cqw 0; }
+  .art { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; background: var(--img) center / cover; }
+  .art::before { content: ""; position: absolute; inset: -20px; background: inherit; filter: blur(14px) brightness(.5) saturate(1.2); }
+  .art img { position: relative; width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .art .t { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 3cqw 6cqw;
+    color: #fff; font: 700 8cqw/1.15 system-ui, sans-serif; text-shadow: 0 1px 3px rgba(0,0,0,.7); overflow: hidden; }
+
+  /* Pegatina de nota (como etiqueta de precio) */
+  .sticker { position: absolute; bottom: -8px; right: -9px; z-index: 3; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+    color: #fff; font: 800 15px/1 system-ui, sans-serif; box-shadow: 0 2px 6px rgba(0,0,0,.45); border: 2px solid rgba(255,255,255,.85); }
+  .s-good { background: var(--good); } .s-mid { background: var(--mid); } .s-bad { background: var(--bad); } .s-none { background: var(--none); }
+  /* Franja de estado */
+  .tag { position: absolute; left: -6%; right: -6%; bottom: 22%; z-index: 2; transform: rotate(-8deg); background: var(--st); color: #fff;
+    text-align: center; padding: 3cqw 0; font: 800 8.5cqw/1 system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase;
+    box-shadow: 0 3px 8px rgba(0,0,0,.45); }
+  .st-jugando { --st: var(--jugando); } .st-terminado { --st: var(--terminado); } .st-abandonado { --st: var(--abandonado); }
+  .empty { color: var(--muted); padding: 30px 6px; }
+
+  /* Ficha del juego */
+  dialog { border: 0; padding: 0; width: min(760px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); border-radius: 16px; background: var(--sheet); color: var(--sheet-text);
+    box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+  dialog::backdrop { background: rgba(10,6,3,.7); backdrop-filter: blur(3px); }
+  .detail { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 22px; padding: 22px; }
+  .detail > div { min-width: 0; overflow-wrap: anywhere; }
+  .detail .game { --w: 200px; cursor: default; align-self: start; } .detail .game:hover { transform: none; }
+  .detail h2 { margin: 0 34px 4px 0; font-size: 22px; line-height: 1.2; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 12px; }
+  .meta span { background: #f1e9e1; color: var(--sheet-muted); border-radius: 999px; padding: 2px 10px; font-size: 12.5px; }
+  .scoreline { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .scoreline .big { width: 50px; height: 50px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 21px; }
+  .scoreline a { color: var(--sheet-muted); font-size: 13px; }
   .desc { margin: 0 0 10px; }
-  .note { font-size: 13px; color: var(--muted); border-left: 3px solid var(--mid); padding-left: 8px; margin: 0 0 10px; }
+  .note { font-size: 13px; color: var(--sheet-muted); border-left: 3px solid var(--mid); padding-left: 8px; margin: 0 0 12px; }
   .pc { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .pc h3 { margin: 0 0 4px; font-size: 14px; }
-  .pc ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .pc h3 { margin: 0 0 4px; font-size: 14px; } .pc ul { margin: 0; padding-left: 18px; font-size: 14px; }
   .pros h3 { color: var(--good); } .cons h3 { color: var(--bad); }
-  .status { margin-top: 10px; display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
-  .status select { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 6px; font: inherit; }
-  .empty { text-align: center; color: var(--muted); padding: 40px; }
-  footer { max-width: 1000px; margin: 0 auto; padding: 8px 16px 30px; color: var(--muted); font-size: 12.5px; }
+  .seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 16px; }
+  .seg button { border: 1px solid var(--sheet-border); background: #fff; color: var(--sheet-text); border-radius: 10px; padding: 9px 4px; font: 600 13.5px system-ui, sans-serif; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--st, #1f1712); border-color: transparent; color: #fff; }
+  .seg .st-pendiente { --st: #1f1712; }
+  .close { position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #f1e9e1; color: var(--sheet-text); font-size: 18px; cursor: pointer; }
 
-  @media (max-width: 720px) {
-    .controls { position: static; }
-    .card { grid-template-columns: 90px 1fr; }
-    .rank { display: none; }
-    .case { width: 96px; padding: 3px 3px 3px 4px; }
-    .case-title { font-size: 8.5cqw; }
+  @media (max-width: 640px) {
+    h1 { font-size: 22px; }
+    .search { max-width: none; margin-left: 0; flex-basis: 100%; order: -1; }
+    .row { padding: 0 8px; }
+    .sticker { width: 30px; height: 30px; font-size: 12.5px; bottom: -6px; right: -7px; }
+    .detail { grid-template-columns: minmax(0, 1fr); padding: 18px; }
+    .detail .game { --w: 130px; margin: 0 auto; }
     .pc { grid-template-columns: 1fr; }
-    .head h2 { font-size: 17px; }
-    .body-col { grid-column: 1 / -1; }
+    .seg { grid-template-columns: 1fr 1fr; }
   }
+  .seg button { overflow-wrap: normal; }
 </style>
 </head>
 <body>
-<header><div class="wrap">
-  <h1>Mi Backlog Switch</h1>
-  <p>Tus juegos digitales de Nintendo ordenados por nota de Metacritic (versión Switch)</p>
-</div></header>
+<header>
+  <h1><span class="logo" aria-hidden="true"><span><i></i><i></i></span></span>Mi estantería Switch</h1>
+  <div class="stats" id="stats"></div>
+</header>
 
-<main>
-  <section class="stats" id="stats"></section>
+<div class="toolbar">
+  <div class="chips" id="group" role="group" aria-label="Agrupar estantes por">
+    <button class="chip" data-v="nota" aria-pressed="true">Por nota</button>
+    <button class="chip" data-v="estado" aria-pressed="false">Por estado</button>
+    <button class="chip" data-v="genero" aria-pressed="false">Por género</button>
+  </div>
+  <span class="sep"></span>
+  <div class="chips">
+    <button class="chip" id="endless" aria-pressed="false">Ocultar online / sin final</button>
+  </div>
+  <input class="search" id="q" type="search" placeholder="Buscar juego…" aria-label="Buscar juego">
+</div>
 
-  <section class="controls">
-    <input type="search" id="q" placeholder="Buscar juego…" aria-label="Buscar">
-    <select id="sort" aria-label="Ordenar">
-      <option value="score">Ordenar: nota Metacritic</option>
-      <option value="value">Ordenar: nota por hora (rápidos y buenos primero)</option>
-      <option value="short">Ordenar: más cortos primero</option>
-      <option value="recent">Ordenar: compra más reciente</option>
-    </select>
-    <select id="genre" aria-label="Género"><option value="">Todos los géneros</option></select>
-    <select id="statusFilter" aria-label="Estado">
-      <option value="">Todos los estados</option>
-      <option value="pendiente">Pendiente</option>
-      <option value="jugando">Jugando</option>
-      <option value="terminado">Terminado</option>
-      <option value="abandonado">Abandonado</option>
-    </select>
-    <select id="origin" aria-label="Origen">
-      <option value="">Comprados y otros</option>
-      <option value="compra">Solo comprados</option>
-      <option value="otros">Gratis / sin compra registrada</option>
-    </select>
-    <label><input type="checkbox" id="hideEndless"> Ocultar juegos sin final</label>
-  </section>
+<main id="shelves"></main>
 
-  <section class="list" id="list"></section>
-</main>
-
-<footer>
-  Notas de Metacritic consultadas el 26/11/2026. Cuando la versión de Switch no tiene metascore propio se usa el general y se indica.
-  Las duraciones son aproximadas. El estado de cada juego se guarda solo en este navegador.
-</footer>
+<dialog id="dlg" aria-label="Ficha del juego"></dialog>
 
 <script src="data.js"></script>
 <script>
 (() => {
   const GAMES = window.GAMES;
-  const STORE_KEY = "backlog-switch-status";
+  const KEY = "backlog-switch-status";
   const STATUS = { pendiente: "Pendiente", jugando: "Jugando", terminado: "Terminado", abandonado: "Abandonado" };
-  const STATUS_ICON = { jugando: "▶", terminado: "✓", abandonado: "✕" };
-
+  const ICON = { jugando: "▶", terminado: "✓", abandonado: "✕" };
   let statuses = {};
-  try { statuses = JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; } catch (e) { statuses = {}; }
-  const saveStatuses = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(statuses)); } catch (e) {} };
-  const statusOf = g => statuses[g.id] || "pendiente";
-
+  try { statuses = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(statuses)); } catch (e) {} };
+  const st = g => statuses[g.id] || "pendiente";
   const $ = id => document.getElementById(id);
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const scoreClass = s => s >= 75 ? "s-good" : s >= 50 ? "s-mid" : "s-bad";
-  const fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" });
-
-  // Género principal para el filtro (antes de la barra)
-  const mainGenre = g => g.genre.split(" / ")[0];
-  [...new Set(GAMES.map(mainGenre))].sort().forEach(gen => {
-    const o = document.createElement("option"); o.value = gen; o.textContent = gen; $("genre").appendChild(o);
-  });
-
-  // Ranking fijo por nota (empates: más reseñas primero)
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const sc = g => g.score ?? -1;
+  const scoreClass = s => s == null ? "s-none" : s >= 75 ? "s-good" : s >= 50 ? "s-mid" : "s-bad";
   const ranked = [...GAMES].sort((a, b) => sc(b) - sc(a) || (b.reviews || 0) - (a.reviews || 0));
   ranked.forEach((g, i) => g.rank = i + 1);
 
-  function renderStats() {
-    const pend = GAMES.filter(g => statusOf(g) === "pendiente" || statusOf(g) === "jugando");
-    const hours = pend.reduce((a, g) => a + (g.horas || 0), 0);
-    const scored = GAMES.filter(g => g.score != null);
-    const avg = Math.round(scored.reduce((a, g) => a + g.score, 0) / scored.length);
-    const done = GAMES.filter(g => statusOf(g) === "terminado").length;
-    $("stats").innerHTML = `
-      <div class="stat"><b>${GAMES.length}</b><span>juegos digitales</span></div>
-      <div class="stat"><b>${pend.length}</b><span>pendientes o jugando</span></div>
-      <div class="stat"><b>~${hours} h</b><span>de backlog con final</span></div>
-      <div class="stat"><b>${avg}</b><span>nota media</span></div>
-      <div class="stat"><b>${done}</b><span>terminados</span></div>`;
+  let group = "nota", hideEndless = false;
+
+  function caseHTML(g, small = true) {
+    const s = st(g);
+    return `
+      <div class="case">
+        <div class="sheet">
+          <div class="band"><span class="l" aria-hidden="true"><i></i><i></i></span>NINTENDO SWITCH</div>
+          <div class="art" style="--img:url('${esc(g.cover)}')">
+            <img src="${esc(g.cover)}" alt="" loading="lazy">
+            <div class="t">${esc(g.title)}</div>
+          </div>
+        </div>
+      </div>
+      ${s !== "pendiente" ? `<div class="tag st-${s}">${ICON[s]} ${STATUS[s]}</div>` : ""}
+      <div class="sticker ${scoreClass(g.score)}">${g.score ?? "–"}</div>`;
+  }
+
+  function groups(items) {
+    if (group === "estado") {
+      const order = ["jugando", "pendiente", "terminado", "abandonado"];
+      const label = { jugando: "Jugando ahora", pendiente: "Pendientes", terminado: "Terminados", abandonado: "Abandonados" };
+      return order.map(k => ({ title: label[k], items: items.filter(g => st(g) === k) }));
+    }
+    if (group === "genero") {
+      const main = g => g.genre.split(" / ")[0];
+      return [...new Set(items.map(main))].sort().map(k => ({ title: k, items: items.filter(g => main(g) === k) }));
+    }
+    return [
+      { title: "Imprescindibles", sub: "90 o más", items: items.filter(g => sc(g) >= 90) },
+      { title: "Muy buenos", sub: "80 – 89", items: items.filter(g => sc(g) >= 80 && sc(g) < 90) },
+      { title: "Buenos", sub: "70 – 79", items: items.filter(g => sc(g) >= 70 && sc(g) < 80) },
+      { title: "Si sobra tiempo", sub: "menos de 70 o sin nota", items: items.filter(g => sc(g) < 70) },
+    ];
+  }
+
+  // Cuántas cajas caben por balda según el ancho disponible
+  function layout() {
+    const w = Math.min(window.innerWidth, 1100) - 32;
+    const caseW = window.innerWidth <= 640 ? 92 : 118, gap = window.innerWidth <= 640 ? 14 : 22;
+    const inner = w - (window.innerWidth <= 640 ? 16 : 36);
+    return { caseW, gap, per: Math.max(2, Math.floor((inner + gap) / (caseW + gap))) };
   }
 
   function render() {
     const q = $("q").value.trim().toLowerCase();
-    const genre = $("genre").value, st = $("statusFilter").value, hideEndless = $("hideEndless").checked, origin = $("origin").value;
-    let items = ranked.filter(g =>
-      (!q || g.title.toLowerCase().includes(q)) &&
-      (!genre || mainGenre(g) === genre) &&
-      (!st || statusOf(g) === st) &&
-      (!hideEndless || g.horas) &&
-      (!origin || (origin === "compra") === !!g.comprado)
-    );
-    const sort = $("sort").value;
-    const h = g => g.horas || 9999;
-    if (sort === "short") items.sort((a, b) => h(a) - h(b) || sc(b) - sc(a));
-    if (sort === "recent") items.sort((a, b) => (b.comprado || "").localeCompare(a.comprado || ""));
-    if (sort === "value") items.sort((a, b) => (Math.max(sc(b), 0) / Math.sqrt(h(b))) - (Math.max(sc(a), 0) / Math.sqrt(h(a))));
+    const items = ranked.filter(g => (!q || g.title.toLowerCase().includes(q)) && (!hideEndless || g.horas));
+    const { caseW, gap, per } = layout();
+    document.documentElement.style.setProperty("--case-w", caseW + "px");
+    document.documentElement.style.setProperty("--gap", gap + "px");
+    const html = groups(items).filter(s => s.items.length).map(s => {
+      const rows = [];
+      for (let i = 0; i < s.items.length; i += per) rows.push(s.items.slice(i, i + per));
+      return `<section class="shelf">
+        <div class="plate">${esc(s.title)} <small>${s.sub ? esc(s.sub) + " · " : ""}${s.items.length}</small></div>
+        ${rows.map(r => `<div class="row"><div class="games">${r.map(g =>
+          `<button class="game" data-id="${g.id}" aria-label="${esc(g.title)}, nota ${g.score ?? "sin nota"}">${caseHTML(g)}</button>`).join("")}</div><div class="plank"></div></div>`).join("")}
+      </section>`;
+    }).join("");
+    $("shelves").innerHTML = html || `<p class="empty">Ningún juego coincide.</p>`;
 
-    if (!items.length) { $("list").innerHTML = `<p class="empty">Ningún juego coincide con los filtros.</p>`; return; }
+    const pend = GAMES.filter(g => ["pendiente", "jugando"].includes(st(g)));
+    $("stats").innerHTML = `<span><b>${GAMES.length}</b> juegos</span><span><b>${GAMES.filter(g => st(g) === "jugando").length}</b> jugando</span>
+      <span><b>${GAMES.filter(g => st(g) === "terminado").length}</b> terminados</span><span><b>~${pend.reduce((a, g) => a + (g.horas || 0), 0)} h</b> de backlog</span>`;
+  }
 
-    $("list").innerHTML = items.map(g => {
-      const s = statusOf(g);
-      const mcUrl = `https://www.metacritic.com/game/${g.slug}/`;
-      const scoreLabel = { switch: g.reviews ? `Switch · ${g.reviews} reseñas` : "Switch", coleccion: "colección Switch", general: "general", none: "sin nota" }[g.scoreSource];
-      return `
-      <article class="card st-${s}">
-        <div class="rank">#${g.rank}</div>
-        <div class="case" style="--img:url('${esc(g.cover)}')">
-          <div class="case-sheet">
-            <div class="case-band"><span class="case-logo" aria-hidden="true"><i></i><i></i></span>NINTENDO SWITCH</div>
-            <div class="case-art">
-              <img src="${esc(g.cover)}" alt="Carátula de ${esc(g.title)}" loading="lazy">
-              <div class="case-title">${esc(g.title)}</div>
-            </div>
-          </div>
-          ${s !== "pendiente" ? `<div class="case-tag">${STATUS_ICON[s]} ${STATUS[s]}</div>` : ""}
-        </div>
-        <div class="body-col">
-          <div class="head">
-            <div>
-              <h2>${esc(g.title)}</h2>
-              <div class="meta">
-                <span class="chip">${esc(g.genre)}</span>
-                <span class="chip">${g.horas ? "~" + g.horas + " h" : "Sin final"}</span>
-                <span class="chip">${g.comprado ? "Comprado " + fmtDate(g.comprado) : "No figura en compras"}</span>
-                ${g.extraScore ? `<span class="chip">${esc(g.extraScore)}</span>` : ""}
-              </div>
-            </div>
-            <a class="scorebox" href="${mcUrl}" target="_blank" rel="noopener" title="Ver en Metacritic"><span class="score ${g.score == null ? "s-none" : scoreClass(g.score)}">${g.score ?? "–"}</span><small>${scoreLabel}</small></a>
-          </div>
+  function openDetail(id) {
+    const g = GAMES.find(x => x.id === id); if (!g) return;
+    const s = st(g);
+    const label = { switch: g.reviews ? `Metacritic Switch · ${g.reviews} reseñas` : "Metacritic Switch", coleccion: "Metacritic · colección Switch", general: "Metacritic general", none: "Sin nota en Metacritic" }[g.scoreSource];
+    const dlg = $("dlg");
+    dlg.innerHTML = `
+      <button class="close" aria-label="Cerrar">✕</button>
+      <div class="detail">
+        <div class="game">${caseHTML(g, false)}</div>
+        <div>
+          <h2>${esc(g.title)}</h2>
+          <div class="meta"><span>#${g.rank} del ranking</span><span>${esc(g.genre)}</span><span>${g.horas ? "~" + g.horas + " h" : "Sin final"}</span>
+            <span>${g.comprado ? "Comprado " + new Date(g.comprado + "T12:00:00").toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" }) : "No figura en compras"}</span></div>
+          <div class="scoreline"><div class="big ${scoreClass(g.score)}">${g.score ?? "–"}</div>
+            <div>${label}<br><a href="https://www.metacritic.com/game/${g.slug}/" target="_blank" rel="noopener">Ver en Metacritic ↗</a></div></div>
           <p class="desc">${esc(g.desc)}</p>
           ${g.switchNote ? `<p class="note">${esc(g.switchNote)}</p>` : ""}
           <div class="pc">
             <div class="pros"><h3>Lo bueno</h3><ul>${g.pros.map(p => `<li>${esc(p)}</li>`).join("")}</ul></div>
             <div class="cons"><h3>Lo malo</h3><ul>${g.cons.map(p => `<li>${esc(p)}</li>`).join("")}</ul></div>
           </div>
-          <div class="status">Estado:
-            <select data-id="${g.id}" aria-label="Estado de ${esc(g.title)}">
-              ${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === s ? "selected" : ""}>${v}</option>`).join("")}
-            </select>
+          <div class="seg" role="group" aria-label="Estado">
+            ${Object.entries(STATUS).map(([k, v]) => `<button class="st-${k}" data-st="${k}" aria-pressed="${k === s}">${ICON[k] ? ICON[k] + " " : ""}${v}</button>`).join("")}
           </div>
         </div>
-      </article>`;
-    }).join("");
+      </div>`;
+    dlg.querySelector(".close").onclick = () => dlg.close();
+    dlg.querySelectorAll("[data-st]").forEach(b => b.onclick = () => {
+      if (b.dataset.st === "pendiente") delete statuses[g.id]; else statuses[g.id] = b.dataset.st;
+      save(); render(); openDetail(g.id);
+    });
+    if (!dlg.open) dlg.showModal();
   }
 
-  $("list").addEventListener("change", e => {
-    if (e.target.matches("select[data-id]")) {
-      statuses[e.target.dataset.id] = e.target.value; saveStatuses(); renderStats(); render();
-    }
+  $("shelves").addEventListener("click", e => { const b = e.target.closest(".game"); if (b) openDetail(b.dataset.id); });
+  $("dlg").addEventListener("click", e => { if (e.target === $("dlg")) $("dlg").close(); });
+  $("group").addEventListener("click", e => {
+    const b = e.target.closest("[data-v]"); if (!b) return;
+    group = b.dataset.v; $("group").querySelectorAll("[data-v]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    render();
   });
-  ["q", "sort", "genre", "statusFilter", "origin", "hideEndless"].forEach(id => $(id).addEventListener("input", render));
-
-  renderStats(); render();
+  $("endless").addEventListener("click", e => { hideEndless = !hideEndless; e.currentTarget.setAttribute("aria-pressed", hideEndless); render(); });
+  $("q").addEventListener("input", render);
+  let t; window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(render, 120); });
+  render();
 })();
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).catch(() => {}));
